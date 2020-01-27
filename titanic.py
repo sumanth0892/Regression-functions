@@ -30,7 +30,7 @@ Y = np.array(X['Survived'])
 X = X.drop(['Survived'],axis = 1)
 X = np.array(X)
 Y = np.reshape(Y,(len(Y),1))
-x = loadDataSet(testSet)
+x = np.array(loadDataSet(testSet))
 y = pd.read_csv(testLabels)
 y = np.array(y.drop(['PassengerId'],axis = 1))
 print(X.shape)
@@ -64,15 +64,16 @@ def stochGradDescent(X,labels,epochs = 150):
 trainWeights = stochGradDescent(X,Y,500)
 print(trainWeights.shape)
 
-
-
-"""
+n,_ = trainWeights.shape
 errorCount = 0; numTestVec = 0.0
 predictions = []
 for i in range(len(x)):
-    predictions.append(classify(x[i,:],trainWeights))
+    point = np.reshape(x[i,:],(n,1))
+    predictions.append(classify(point,trainWeights))
 for i in range(len(y)):
-    errorCount += abs(predictions[i] - y[i])"""
+    errorCount += abs(predictions[i] - y[i])
+print(errorCount)
+    
 
 #Building a deep learning model
 model = models.Sequential()
@@ -81,6 +82,8 @@ model.add(layers.Dense(32,activation='relu'))
 model.add(layers.Dense(1,activation='sigmoid'))
 model.compile(loss = 'binary_crossentropy',optimizer='rmsprop',metrics=['acc'])
 history = model.fit(X,Y,epochs = 100,batch_size = 32)
+pRedictions = model.predict(x)
+print(sum(abs(pRedictions - y)))
 
 
     
